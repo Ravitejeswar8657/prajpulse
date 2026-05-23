@@ -14,7 +14,7 @@ env:
   S3_BUCKET: praja-pulse-frontend-quu044
   CLOUDFRONT_DIST_ID: E2GXYFA4U05OO2
   ECR_REPOSITORY: praja-pulse-backend
-  APP_RUNNER_SERVICE_ARN: arn:aws:apprunner:us-east-1:812661756905:service/praja-pulse-backend/215d06c15ced404190ce9466897d11c9
+  APP_RUNNER_SERVICE_ARN: arn:aws:apprunner:us-east-1:812661756905:service/praja-pulse-backend/f6f7d0c002e74e23a73d284debfe6d00
 
 jobs:
   deploy-backend:

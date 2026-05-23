@@ -62,7 +62,7 @@ The project includes a `.github/workflows/deploy.yml` pipeline that automates:
 **Required GitHub Secrets:**
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
-- `PROD_API_URL`: Your App Runner service URL (e.g., `https://rrdmb6ympx.us-east-1.awsapprunner.com`).
+- `PROD_API_URL`: Your App Runner service URL (e.g., `https://2xmr2xiypq.us-east-1.awsapprunner.com`).
 - `GEMINI_API_KEY`: Required for deep scoring.
 
 ## Docker
