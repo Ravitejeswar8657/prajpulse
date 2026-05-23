@@ -1,0 +1,96 @@
+# Required GitHub Secrets:
+# - AWS_ACCESS_KEY_ID
+# - AWS_SECRET_ACCESS_KEY
+# - PROD_API_URL
+# - GEMINI_API_KEY (optional, for backend App Runner)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  S3_BUCKET: praja-pulse-frontend-quu044
+  CLOUDFRONT_DIST_ID: E2GXYFA4U05OO2
+  ECR_REPOSITORY: praja-pulse-backend
+  APP_RUNNER_SERVICE_ARN: arn:aws:apprunner:us-east-1:812661756905:service/praja-pulse-backend/215d06c15ced404190ce9466897d11c9
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./backend
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest ./backend
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      # Note: If your App Runner service is set to "Automatic" deployment, 
+      # it will pick up the 'latest' tag automatically.
+      # Otherwise, use this step to trigger manually:
+      - name: Deploy to App Runner
+        run: |
+          aws apprunner start-deployment --service-arn ${{ env.APP_RUNNER_SERVICE_ARN }}
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    needs: deploy-backend # Ensure backend is ready if needed, or run in parallel
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Inject Backend API URL
+        working-directory: frontend
+        run: |
+          # Replace the local dev URL with your actual production App Runner URL
+          # Use a secret for the production URL for flexibility
+          sed -i "s|window.PRAJA_API_BASE = .*|window.PRAJA_API_BASE = \"${{ secrets.PROD_API_URL }}\";|g" index.html
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync frontend/dist/ s3://${{ env.S3_BUCKET }} --delete
+
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DIST_ID }} --paths "/*"
