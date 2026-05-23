@@ -63,11 +63,20 @@ resource "aws_s3_bucket_website_configuration" "frontend" {
   }
 }
 
-# --- 3. CloudFront Distribution ---
+# --- 3. CloudFront Origin Access Control (OAC) ---
+resource "aws_cloudfront_origin_access_control" "frontend" {
+  name                              = "${var.project_name}-oac"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
+
+# --- 4. CloudFront Distribution ---
 resource "aws_cloudfront_distribution" "frontend" {
   origin {
-    domain_name = aws_s3_bucket.frontend.bucket_regional_domain_name
-    origin_id   = "S3Origin"
+    domain_name              = aws_s3_bucket.frontend.bucket_regional_domain_name
+    origin_id                = "S3Origin"
+    origin_access_control_id = aws_cloudfront_origin_access_control.frontend.id
   }
 
   enabled             = true
@@ -101,9 +110,47 @@ resource "aws_cloudfront_distribution" "frontend" {
   viewer_certificate {
     cloudfront_default_certificate = true
   }
+
+  # SPA Routing Fix: Redirect 404/403 to index.html
+  custom_error_response {
+    error_code            = 403
+    response_code         = 200
+    response_page_path    = "/index.html"
+    error_caching_min_ttl = 10
+  }
+  custom_error_response {
+    error_code            = 404
+    response_code         = 200
+    response_page_path    = "/index.html"
+    error_caching_min_ttl = 10
+  }
 }
 
-# --- 4. IAM Role for App Runner to pull from ECR ---
+# --- 5. S3 Bucket Policy for CloudFront OAC ---
+resource "aws_s3_bucket_policy" "frontend" {
+  bucket = aws_s3_bucket.frontend.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "AllowCloudFrontServicePrincipalReadOnly"
+        Effect    = "Allow"
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        }
+        Action   = "s3:GetObject"
+        Resource = "${aws_s3_bucket.frontend.arn}/*"
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = aws_cloudfront_distribution.frontend.arn
+          }
+        }
+      }
+    ]
+  })
+}
+
+# --- 6. IAM Role for App Runner to pull from ECR ---
 resource "aws_iam_role" "apprunner_service_role" {
   name = "${var.project_name}-apprunner-service-role"
 
