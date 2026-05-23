@@ -43,9 +43,9 @@ interface PulseData {
 }
 
 const PARTY_CONFIG: Record<string, { color: string; bg: string; text: string; fullName: string; logo: string }> = {
-  TDP:   { color: "#F5C518", bg: "bg-[#F5C518]", text: "text-[#1a1400]", fullName: "Telugu Desam Party", logo: "/assets/parties/tdp.svg" },
-  JSP:   { color: "#E2231A", bg: "bg-[#E2231A]", text: "text-white", fullName: "Jana Sena Party", logo: "/assets/parties/jsp.svg" },
-  YSRCP: { color: "#1E63C4", bg: "bg-[#1E63C4]", text: "text-white", fullName: "Yuvajana Sramika Rythu Congress Party", logo: "/assets/parties/ysrcp.svg" },
+  TDP:   { color: "#F5C518", bg: "bg-[#F5C518]", text: "text-[#1a1400]", fullName: "Telugu Desam Party", logo: "/assets/parties/Telugu_Desam_Party_Flag.png" },
+  JSP:   { color: "#E2231A", bg: "bg-[#E2231A]", text: "text-white", fullName: "Jana Sena Party", logo: "/assets/parties/jsplogo.jpg" },
+  YSRCP: { color: "#1E63C4", bg: "bg-[#1E63C4]", text: "text-white", fullName: "Yuvajana Sramika Rythu Congress Party", logo: "/assets/parties/YSRCPLOGO.jpg" },
 };
 
 const LEADER_PHOTOS: Record<string, string> = {
@@ -53,9 +53,9 @@ const LEADER_PHOTOS: Record<string, string> = {
   lokesh: "/assets/leaders/lokesh.jpg",
   pawan: "/assets/leaders/pawan.jpg",
   jagan: "/assets/leaders/jagan.jpg",
-  tdp: "/assets/parties/tdp.svg",
-  jsp: "/assets/parties/jsp.svg",
-  ysrcp: "/assets/parties/ysrcp.svg",
+  tdp: "/assets/parties/Telugu_Desam_Party_Flag.png",
+  jsp: "/assets/parties/jsplogo.jpg",
+  ysrcp: "/assets/parties/YSRCPLOGO.jpg",
 };
 
 const getToneColor = (v: number) => (v > 0.15 ? "text-green-500" : v < -0.15 ? "text-red-500" : "text-yellow-600");
