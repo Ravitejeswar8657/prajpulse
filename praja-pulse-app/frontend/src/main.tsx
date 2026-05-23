@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import PrajaPulse from "./PrajaPulse.tsx";
+import PrajaPulse from "./PrajaPulse";
 import "./index.css";
 
 const rootElement = document.getElementById("root");
