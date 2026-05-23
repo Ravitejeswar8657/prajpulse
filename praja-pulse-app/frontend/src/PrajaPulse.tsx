@@ -43,19 +43,19 @@ interface PulseData {
 }
 
 const PARTY_CONFIG: Record<string, { color: string; bg: string; text: string; fullName: string; logo: string }> = {
-  TDP:   { color: "#F5C518", bg: "bg-[#F5C518]", text: "text-[#1a1400]", fullName: "Telugu Desam Party", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d0/Telugu_Desam_Party_Flag.png" },
-  JSP:   { color: "#E2231A", bg: "bg-[#E2231A]", text: "text-white", fullName: "Jana Sena Party", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Janasena_Party_Flag.png" },
-  YSRCP: { color: "#1E63C4", bg: "bg-[#1E63C4]", text: "text-white", fullName: "Yuvajana Sramika Rythu Congress Party", logo: "https://upload.wikimedia.org/wikipedia/te/a/a1/YSRCP_Flag.jpg" },
+  TDP:   { color: "#F5C518", bg: "bg-[#F5C518]", text: "text-[#1a1400]", fullName: "Telugu Desam Party", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Telugu_Desam_Party_Flag.png/320px-Telugu_Desam_Party_Flag.png" },
+  JSP:   { color: "#E2231A", bg: "bg-[#E2231A]", text: "text-white", fullName: "Jana Sena Party", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Janasena_Party_Flag.png/320px-Janasena_Party_Flag.png" },
+  YSRCP: { color: "#1E63C4", bg: "bg-[#1E63C4]", text: "text-white", fullName: "Yuvajana Sramika Rythu Congress Party", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Ceiling_fan.svg/320px-Ceiling_fan.svg.png" },
 };
 
 const LEADER_PHOTOS: Record<string, string> = {
-  naidu: "https://upload.wikimedia.org/wikipedia/commons/1/15/Chandrababu_Naidu_2017.jpg",
-  lokesh: "https://upload.wikimedia.org/wikipedia/commons/a/a0/Nara_Lokesh.jpg",
-  pawan: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Pawan_Kalyan_at_Janasena_meeting_in_2019.jpg",
-  jagan: "https://upload.wikimedia.org/wikipedia/commons/5/5e/The_Chief_Minister_of_Andhra_Pradesh%2C_Shri_Y.S._Jagan_Mohan_Reddy.jpg",
-  tdp: "https://upload.wikimedia.org/wikipedia/commons/d/d0/Telugu_Desam_Party_Flag.png",
-  jsp: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Janasena_Party_Flag.png",
-  ysrcp: "https://upload.wikimedia.org/wikipedia/te/a/a1/YSRCP_Flag.jpg",
+  naidu: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Chandrababu_Naidu_2017.jpg/400px-Chandrababu_Naidu_2017.jpg",
+  lokesh: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Nara_Lokesh.jpg/400px-Nara_Lokesh.jpg",
+  pawan: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Pawan_Kalyan_at_Janasena_meeting_in_2019.jpg/400px-Pawan_Kalyan_at_Janasena_meeting_in_2019.jpg",
+  jagan: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/The_Chief_Minister_of_Andhra_Pradesh%2C_Shri_Y.S._Jagan_Mohan_Reddy.jpg/400px-The_Chief_Minister_of_Andhra_Pradesh%2C_Shri_Y.S._Jagan_Mohan_Reddy.jpg",
+  tdp: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Telugu_Desam_Party_Flag.png/320px-Telugu_Desam_Party_Flag.png",
+  jsp: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Janasena_Party_Flag.png/320px-Janasena_Party_Flag.png",
+  ysrcp: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Ceiling_fan.svg/320px-Ceiling_fan.svg.png",
 };
 
 const getToneColor = (v: number) => (v > 0.15 ? "text-green-500" : v < -0.15 ? "text-red-500" : "text-yellow-600");
