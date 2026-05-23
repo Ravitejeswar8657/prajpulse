@@ -23,11 +23,14 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from dotenv import load_dotenv
 
 from .aggregator import fetch_headlines
 from .ground_truth import score_text, ENTITIES, DISTRICTS
 from .representatives import REPRESENTATIVES
 from . import deep_scorer
+
+load_dotenv() # Load from .env file if it exists
 
 REFRESH_MINUTES = int(os.environ.get("REFRESH_MINUTES", "30"))
 REFRESH_TOKEN = os.environ.get("REFRESH_TOKEN", "")  # set in prod to protect /api/refresh
