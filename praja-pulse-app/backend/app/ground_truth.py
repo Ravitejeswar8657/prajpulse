@@ -23,6 +23,35 @@ ENTITIES = [
      "aliases": ["ysrcp", "ycp", "wycp"]},
 ]
 
+DISTRICTS = [
+    {"id": "srikakulam", "label": "Srikakulam", "cues": ["srikakulam", "palasa", "tekkali", "itapuram"]},
+    {"id": "vizianagaram", "label": "Vizianagaram", "cues": ["vizianagaram", "bobbili", "gajapathinagaram"]},
+    {"id": "manyam", "label": "Parvathipuram Manyam", "cues": ["parvathipuram", "salur", "manyam"]},
+    {"id": "visakhapatnam", "label": "Visakhapatnam", "cues": ["visakhapatnam", "vizag", "bheemli", "gajuwaka"]},
+    {"id": "anakapalli", "label": "Anakapalli", "cues": ["anakapalli", "narsipatnam", "chodavaram"]},
+    {"id": "asr", "label": "Alluri Sitharama Raju", "cues": ["paderu", "araku", "rampachodavaram", "asr district"]},
+    {"id": "kakinada", "label": "Kakinada", "cues": ["kakinada", "pithapuram", "tuni", "peddapuram"]},
+    {"id": "east_godavari", "label": "East Godavari", "cues": ["rajahmundry", "rajamahendravaram", "kovvur"]},
+    {"id": "konaseema", "label": "Konaseema", "cues": ["amalapuram", "konaseema", "ravulapalem"]},
+    {"id": "west_godavari", "label": "West Godavari", "cues": ["bhimavaram", "narasapuram", "tadepalligudem", "tanuku"]},
+    {"id": "eluru", "label": "Eluru", "cues": ["eluru", "jangareddygudem", "kaikaluru"]},
+    {"id": "krishna", "label": "Krishna", "cues": ["machilipatnam", "gudivada", "krishna district"]},
+    {"id": "ntr", "label": "NTR (Vijayawada)", "cues": ["vijayawada", "ntr district", "nandigama", "mylavaram"]},
+    {"id": "guntur", "label": "Guntur", "cues": ["guntur", "tenali", "mangalagiri"]},
+    {"id": "palnadu", "label": "Palnadu", "cues": ["narasaraopeta", "palnadu", "macherla", "sattenapalli"]},
+    {"id": "bapatla", "label": "Bapatla", "cues": ["bapatla", "chirala", "repalle"]},
+    {"id": "prakasam", "label": "Prakasam", "cues": ["ongole", "prakasam", "markapur", "kandukur"]},
+    {"id": "nellore", "label": "SPS Nellore", "cues": ["nellore", "kavali", "gudur", "atmakur"]},
+    {"id": "kurnool", "label": "Kurnool", "cues": ["kurnool", "adoni", "yemmiganur"]},
+    {"id": "nandyal", "label": "Nandyal", "cues": ["nandyal", "dhone", "allagadda", "srisailam"]},
+    {"id": "anantapur", "label": "Anantapur", "cues": ["anantapur", "tadpatri", "rayadurg"]},
+    {"id": "sathya_sai", "label": "Sri Sathya Sai", "cues": ["puttaparthi", "hindupur", "dharmavaram", "kadiri"]},
+    {"id": "kadapa", "label": "YSR Kadapa", "cues": ["kadapa", "pulivendula", "proddatur"]},
+    {"id": "annamayya", "label": "Annamayya", "cues": ["rayachoti", "madanapalle", "rajampet"]},
+    {"id": "chittoor", "label": "Chittoor", "cues": ["chittoor", "kuppam", "palamaner", "punganur"]},
+    {"id": "tirupati", "label": "Tirupati", "cues": ["tirupati", "srikalahasti", "sullurpeta"]},
+]
+
 ISSUES = [
     {"id": "amaravati", "label": "Amaravati / Capital",
      "cues": ["amaravati", "capital", "secretariat"]},
@@ -80,10 +109,13 @@ def score_text(text: str):
     s = round(s, 2)
 
     issue = next((i["label"] for i in ISSUES if any(c in lc for c in i["cues"])), "Other")
+    location = next((d["label"] for d in DISTRICTS if any(c in lc for c in d["cues"])), "Statewide")
+
     return {
         "text": text,
         "entities": [{"id": e["id"], "label": e["label"], "party": e["party"], "sentiment": s} for e in present],
         "issue": issue,
+        "location": location,
         "method": "lexicon",
         "confident": hits > 0,
     }

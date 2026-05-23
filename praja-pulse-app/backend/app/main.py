@@ -25,14 +25,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from .aggregator import fetch_headlines
-from .ground_truth import score_text, ENTITIES
+from .ground_truth import score_text, ENTITIES, DISTRICTS
 from . import deep_scorer
 
 REFRESH_MINUTES = int(os.environ.get("REFRESH_MINUTES", "30"))
 REFRESH_TOKEN = os.environ.get("REFRESH_TOKEN", "")  # set in prod to protect /api/refresh
 ALLOW_ORIGINS = os.environ.get("ALLOW_ORIGINS", "*").split(",")
 
-_cache = {"scored": [], "board": [], "issues": [], "updated_at": None, "count": 0}
+_cache = {"scored": [], "board": [], "issues": [], "districts": [], "updated_at": None, "count": 0}
 
 
 def _aggregate(scored):
@@ -55,7 +55,26 @@ def _aggregate(scored):
     for r in scored:
         iss[r["issue"]] = iss.get(r["issue"], 0) + 1
     issues = sorted(iss.items(), key=lambda kv: kv[1], reverse=True)
-    return board, issues
+
+    dist_acc = {}
+    for r in scored:
+        if r["location"] == "Statewide":
+            continue
+        # Average sentiment for the district based on all entities mentioned in that news
+        if not r["entities"]:
+            continue
+        avg_s = sum(e["sentiment"] for e in r["entities"]) / len(r["entities"])
+        d = dist_acc.setdefault(r["location"], {"sum": 0.0, "n": 0})
+        d["sum"] += avg_s
+        d["n"] += 1
+    
+    districts = []
+    for d_meta in DISTRICTS:
+        a = dist_acc.get(d_meta["label"])
+        net = round(a["sum"] / a["n"], 2) if a and a["n"] > 0 else 0.0
+        districts.append({"id": d_meta["id"], "label": d_meta["label"], "net": net, "n": a["n"] if a else 0})
+
+    return board, issues, districts
 
 
 def refresh_cache():
@@ -66,12 +85,13 @@ def refresh_cache():
         if s:
             s.update({"link": h["link"], "source": h["source"], "published": h["published"]})
             scored.append(s)
-    board, issues = _aggregate(scored)
+    board, issues, districts = _aggregate(scored)
     _cache.update({
-        "scored": scored, "board": board, "issues": issues,
+        "scored": scored, "board": board, "issues": issues, "districts": districts,
         "count": len(scored), "updated_at": datetime.now(timezone.utc).isoformat(),
     })
     return _cache["count"]
+
 
 
 async def _scheduler():
@@ -122,6 +142,7 @@ def pulse_json(limit: int):
         "updated_at": _cache["updated_at"],
         "board": _cache["board"],
         "issues": _cache["issues"],
+        "districts": _cache["districts"],
         "signals": _cache["scored"][:limit],
         "deep_available": deep_scorer.deep_available(),
     }
