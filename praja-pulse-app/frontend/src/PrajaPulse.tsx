@@ -43,19 +43,19 @@ interface PulseData {
 }
 
 const PARTY_CONFIG: Record<string, { color: string; bg: string; text: string; fullName: string; logo: string }> = {
-  TDP:   { color: "#F5C518", bg: "bg-[#F5C518]", text: "text-[#1a1400]", fullName: "Telugu Desam Party", logo: "https://api.dicebear.com/9.x/initials/svg?seed=TDP&backgroundColor=F5C518" },
-  JSP:   { color: "#E2231A", bg: "bg-[#E2231A]", text: "text-white", fullName: "Jana Sena Party", logo: "https://api.dicebear.com/9.x/initials/svg?seed=JSP&backgroundColor=E2231A" },
-  YSRCP: { color: "#1E63C4", bg: "bg-[#1E63C4]", text: "text-white", fullName: "Yuvajana Sramika Rythu Congress Party", logo: "https://api.dicebear.com/9.x/initials/svg?seed=YCP&backgroundColor=1E63C4" },
+  TDP:   { color: "#F5C518", bg: "bg-[#F5C518]", text: "text-[#1a1400]", fullName: "Telugu Desam Party", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d0/Telugu_Desam_Party_Flag.png" },
+  JSP:   { color: "#E2231A", bg: "bg-[#E2231A]", text: "text-white", fullName: "Jana Sena Party", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Janasena_Party_Flag.png" },
+  YSRCP: { color: "#1E63C4", bg: "bg-[#1E63C4]", text: "text-white", fullName: "Yuvajana Sramika Rythu Congress Party", logo: "https://upload.wikimedia.org/wikipedia/te/a/a1/YSRCP_Flag.jpg" },
 };
 
 const LEADER_PHOTOS: Record<string, string> = {
-  naidu: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200&h=200",
-  lokesh: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200&h=200",
-  pawan: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200&h=200",
-  jagan: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200&h=200",
-  tdp: "https://api.dicebear.com/9.x/initials/svg?seed=TDP&backgroundColor=F5C518",
-  jsp: "https://api.dicebear.com/9.x/initials/svg?seed=JSP&backgroundColor=E2231A",
-  ysrcp: "https://api.dicebear.com/9.x/initials/svg?seed=YCP&backgroundColor=1E63C4",
+  naidu: "https://upload.wikimedia.org/wikipedia/commons/1/15/Chandrababu_Naidu_2017.jpg",
+  lokesh: "https://upload.wikimedia.org/wikipedia/commons/a/a0/Nara_Lokesh.jpg",
+  pawan: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Pawan_Kalyan_at_Janasena_meeting_in_2019.jpg",
+  jagan: "https://upload.wikimedia.org/wikipedia/commons/5/5e/The_Chief_Minister_of_Andhra_Pradesh%2C_Shri_Y.S._Jagan_Mohan_Reddy.jpg",
+  tdp: "https://upload.wikimedia.org/wikipedia/commons/d/d0/Telugu_Desam_Party_Flag.png",
+  jsp: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Janasena_Party_Flag.png",
+  ysrcp: "https://upload.wikimedia.org/wikipedia/te/a/a1/YSRCP_Flag.jpg",
 };
 
 const getToneColor = (v: number) => (v > 0.15 ? "text-green-500" : v < -0.15 ? "text-red-500" : "text-yellow-600");
@@ -237,7 +237,7 @@ export default function PrajaPulse() {
           </button>
         )}
       </div>
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-10">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-8 mb-12">
         {data.board.map((e, i) => {
           const config = PARTY_CONFIG[e.party] || { color: "#888", bg: "bg-gray-500", text: "text-white", fullName: e.party, logo: "" };
           const isSelected = selectedEntityId === e.id;
@@ -245,63 +245,72 @@ export default function PrajaPulse() {
             <div 
               key={e.id} 
               onClick={() => setSelectedEntityId(e.id)}
-              className={`group bg-[#1a1a1a] border-2 cursor-pointer transition-all duration-300 ${isSelected ? 'border-white ring-4 ring-white/10 scale-[1.02] z-10' : 'border-black opacity-90 hover:opacity-100 hover:border-gray-700'} overflow-hidden relative shadow-[8px_8px_0_var(--shadow-color)]`} 
+              className={`group bg-[#1a1a1a] border-2 cursor-pointer transition-all duration-500 ease-out ${isSelected ? 'border-white ring-8 ring-white/5 scale-[1.03] z-10' : 'border-black opacity-95 hover:opacity-100 hover:border-gray-600 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7)]'} overflow-hidden relative shadow-[10px_10px_0_var(--shadow-color)]`} 
               style={{ "--shadow-color": config.color } as any}
             >
               {/* Party Strip */}
-              <div className={`h-1.5 ${config.bg}`} />
+              <div className={`h-2 ${config.bg}`} />
               
-              <div className="p-5">
-                <div className="flex justify-between items-start mb-4">
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-6">
                   <div className="relative">
-                    <div className="w-20 h-20 overflow-hidden border-2 border-black bg-gray-900 shadow-[4px_4px_0_#000]">
-                      <img src={LEADER_PHOTOS[e.id] || config.logo} alt={e.label} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                    <div className="w-24 h-24 overflow-hidden border-2 border-black bg-gray-900 shadow-[6px_6px_0_#000] group-hover:shadow-[8px_8px_0_#000] transition-all">
+                      <img src={LEADER_PHOTOS[e.id] || config.logo} alt={e.label} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100" />
                     </div>
-                    <div className={`absolute -bottom-2 -right-2 w-8 h-8 border-2 border-black ${config.bg} flex items-center justify-center shadow-[2px_2px_0_#000]`}>
-                       <span className={`font-anton text-xs ${config.text}`}>#{i + 1}</span>
+                    <div className={`absolute -bottom-3 -right-3 w-10 h-10 border-2 border-black ${config.bg} flex items-center justify-center shadow-[3px_3px_0_#000] transform group-hover:rotate-12 transition-transform`}>
+                       <span className={`font-anton text-sm ${config.text}`}>#{i + 1}</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className={`font-anton text-4xl leading-none mb-1 ${getToneColor(e.net)}`}>
+                    <div className={`font-anton text-5xl leading-none mb-1 drop-shadow-md ${getToneColor(e.net)}`}>
                       {e.net > 0 ? "+" : ""}{e.net.toFixed(2)}
                     </div>
-                    <div className="text-[10px] font-black uppercase text-gray-500 tracking-tighter">Net Sentiment</div>
+                    <div className="text-[10px] font-black uppercase text-gray-500 tracking-widest">Net Pulse</div>
                   </div>
                 </div>
 
-                <div className="mb-4">
-                  <h3 className="font-anton text-xl leading-tight uppercase tracking-tight group-hover:text-[#F5C518] transition-colors">{e.label}</h3>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className={`text-[10px] font-black px-1.5 py-0.5 border border-black ${config.bg} ${config.text} uppercase`}>
+                <div className="mb-6">
+                  <h3 className="font-anton text-2xl leading-tight uppercase tracking-tight group-hover:text-[#F5C518] transition-colors">{e.label}</h3>
+                  <div className="flex items-center gap-3 mt-2">
+                    <div className="w-6 h-6 border border-black shadow-[2px_2px_0_#000] overflow-hidden bg-white">
+                      <img src={config.logo} alt={e.party} className="w-full h-full object-contain" />
+                    </div>
+                    <span className={`text-[11px] font-black px-2 py-0.5 border border-black ${config.bg} ${config.text} uppercase`}>
                       {e.party}
                     </span>
-                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest truncate max-w-[150px]">
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest truncate max-w-[180px]">
                       {config.fullName}
                     </span>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <div className="h-3 bg-black/50 relative overflow-hidden border border-gray-800">
+                <div className="space-y-4">
+                  <div className="h-4 bg-black/60 relative overflow-hidden border border-gray-800 rounded-sm">
                     <div 
-                      className="absolute top-0 h-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(255,255,255,0.2)]" 
+                      className="absolute top-0 h-full transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(255,255,255,0.3)]" 
                       style={{ 
                         width: `${Math.abs(e.net) * 50}%`, 
                         left: `${e.net >= 0 ? 50 : 50 - Math.abs(e.net) * 50}%`,
                         backgroundColor: e.net > 0 ? '#22c55e' : e.net < 0 ? '#ef4444' : '#ca8a04'
                       }} 
                     />
-                    <div className="absolute top-0 left-1/2 w-0.5 h-full bg-white/30 -translate-x-1/2" />
+                    <div className="absolute top-0 left-1/2 w-0.5 h-full bg-white/40 -translate-x-1/2" />
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest flex items-center gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#F5C518] animate-pulse" />
-                      {e.n} Data Points
+                    <div className="text-[11px] text-gray-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full ${e.net > 0 ? 'bg-green-500' : 'bg-red-500'} animate-pulse`} />
+                      {e.n} Signal Count
                     </div>
-                    <div className="text-[10px] text-gray-500 font-bold uppercase hover:text-white cursor-help transition-colors">
-                      Details →
-                    </div>
+                    <button 
+                      onClick={(evt) => {
+                        evt.stopPropagation();
+                        setSelectedEntityId(isSelected ? null : e.id);
+                      }}
+                      className="text-[10px] text-[#F5C518] font-black uppercase tracking-widest hover:text-white transition-colors flex items-center gap-1 group/btn"
+                    >
+                      {isSelected ? "Showing All" : "View Details"} <ChevronRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
+                    </button>
                   </div>
                 </div>
               </div>
