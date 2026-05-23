@@ -1,60 +1,61 @@
-# Praja Pulse
+# Praja Pulse 🛰️
 
-AP political sentiment radar. A FastAPI backend aggregates Andhra Pradesh
-political headlines (via RSS), scores them with a Telugu/Tenglish/English
-sentiment lexicon, and serves clean JSON. A Vite + React frontend renders it
-as a bold-poster dashboard: a per-leader sentiment leaderboard, hot issues,
-and a live signal feed. Optional Claude "deep" scoring for hard cases.
+**AP Political Sentiment Radar** — A real-time dashboard aggregating and analyzing political sentiment in Andhra Pradesh.
 
-```
-praja-pulse-app/
-├── backend/      FastAPI service (scrape + score + serve)
-└── frontend/     Vite + React dashboard (bold-poster UI)
-```
+![Project Status](https://img.shields.io/badge/Status-Production-success)
+![AI](https://img.shields.io/badge/AI-Google%20Gemini%201.5-blue)
+![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20TS%20%2B%20Tailwind-61dafb)
 
-## Quick start
+## 🌟 Overview
+Praja Pulse is a modernized political radar that captures headlines across Andhra Pradesh, scores them using a specialized Telugu-aware lexicon, and provides deep AI analysis via Google Gemini.
+
+### Key Features:
+- **Real-time RSS Aggregation:** Scrapes major AP news sources automatically.
+- **Telugu/Tenglish Lexicon:** Built-in sentiment engine for regional linguistic nuances.
+- **Gemini AI "Deep" Mode:** Handles sarcasm and multi-entity sentiment with advanced LLMs.
+- **Interactive Dashboard:** 
+  - Clickable leaderboards for filtering news.
+  - Paginated signal feed.
+  - Immersive full-screen mode.
+  - Modern "bold-poster" UI using Tailwind CSS.
+
+## 🏗️ Architecture
+- **Backend:** FastAPI (Python 3.12)
+- **Frontend:** React 18 + Vite + TypeScript + Tailwind CSS
+- **Infrastructure:** 
+  - **AWS App Runner:** Containerized backend with auto-deploy.
+  - **AWS S3 + CloudFront:** Scalable, secure frontend hosting.
+  - **Terraform:** Infrastructure as Code.
+  - **GitHub Actions:** Fully automated CI/CD pipeline.
+
+## 🚀 Quick Start (Local)
 
 ### 1. Backend
 ```bash
-cd backend
-python -m venv .venv && source .venv/bin/activate   # optional
+cd praja-pulse-app/backend
 pip install -r requirements.txt
+export GEMINI_API_KEY=your_key_here
 uvicorn app.main:app --reload
-# serves http://127.0.0.1:8000/api/pulse
-```
-On first boot it pulls live AP headlines and scores them. (If you're on a
-restricted network that blocks news.google.com, the feed will be empty —
-that's a network issue, not a code one.)
-
-Optional: enable the Claude-powered DEEP button
-```bash
-export ANTHROPIC_API_KEY=sk-...    # key stays server-side, never in the browser
 ```
 
 ### 2. Frontend
 ```bash
-cd frontend
+cd praja-pulse-app/frontend
 npm install
 npm run dev
-# opens http://127.0.0.1:5173 — reads the backend at http://127.0.0.1:8000
 ```
-The backend origin is set in `frontend/index.html` via `window.PRAJA_API_BASE`.
-Change it there when you deploy.
 
-## Deploy
-- Frontend: `npm run build` → drop `frontend/dist/` on Netlify / Vercel / any static host.
-- Backend: containerized (`backend/Dockerfile`) → AKS / Azure Web App / Fly / Render.
-  Lock `ALLOW_ORIGINS` to your frontend URL and store the API key in Key Vault /
-  Managed Identity rather than a plain env var.
+## ☁️ Deployment
+The project is configured for an **economical AWS deployment** (~$7.50/mo).
 
-## Where the value lives (extend these)
-- `backend/app/ground_truth.py` → the LEXICON (Telugu/Tenglish sentiment terms)
-  and ENTITIES (leaders + aliases). This is the AP-native part that's yours.
-- `backend/app/aggregator.py` → FEEDS. Add publisher RSS feeds for more coverage.
+1. **Infrastructure:** Run `terraform apply` in the `praja-pulse-app/` directory.
+2. **CI/CD:** Configure GitHub Secrets:
+   - `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
+   - `GEMINI_API_KEY`
+   - `PROD_API_URL` (Your App Runner URL)
 
-## Notes
-- Uses RSS, not HTML scraping: keyless, stable, and clean on copyright
-  (headlines + links only; the UI links back to each source).
-- The backend caches results and refreshes on a schedule, so visitors hit a
-  warm cache instead of triggering a scrape each time.
-- Public data only · no PII.
+## 🤝 Contribution
+The core "moat" of this project is in `backend/app/ground_truth.py`. Update the `LEXICON` and `ENTITIES` to improve the radar's precision.
+
+---
+*Built for the people of Andhra Pradesh. Powered by Google AI.*

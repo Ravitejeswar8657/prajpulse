@@ -1,6 +1,6 @@
 # Praja Pulse — Project Instructions
 
-AP political sentiment radar. A FastAPI backend aggregates Andhra Pradesh political headlines (via RSS), scores them with a Telugu/Tenglish/English sentiment lexicon, and serves clean JSON. A Vite + React frontend renders it as a bold-poster dashboard.
+AP political sentiment radar. A FastAPI backend aggregates Andhra Pradesh political headlines (via RSS), scores them with a Telugu/Tenglish/English sentiment lexicon, and serves clean JSON. A Vite + React frontend renders it as a bold-poster dashboard with interactive filtering and Gemini AI deep scoring.
 
 ## Project Structure
 
@@ -14,10 +14,10 @@ praja-pulse-app/
 │   │   └── main.py         # API endpoints and background scheduler
 │   ├── Dockerfile          # Containerization for backend
 │   └── requirements.txt    # Python dependencies
-└── frontend/           # Vite + React + TS dashboard
+└── frontend/           # Vite + React + TypeScript + Tailwind
     ├── src/
     │   ├── main.tsx        # Entry point (Tailwind + TS)
-    │   ├── PrajaPulse.tsx  # Main dashboard component
+    │   ├── PrajaPulse.tsx  # Main dashboard component (Enhanced)
     │   └── index.css       # Tailwind directives
     ├── index.html          # Configures window.PRAJA_API_BASE
     ├── tailwind.config.js  # Tailwind configuration
@@ -27,8 +27,8 @@ praja-pulse-app/
 
 ## Tech Stack
 
-- **Backend:** Python, FastAPI, Feedparser (RSS), Pydantic, Google Gemini AI.
-- **Frontend:** React, Vite, TypeScript, Tailwind CSS.
+- **Backend:** Python, FastAPI, Feedparser (RSS), Pydantic, Google Gemini AI (1.5 Flash).
+- **Frontend:** React, Vite, TypeScript, Tailwind CSS, Lucide Icons.
 
 ## Building and Running
 
@@ -48,14 +48,14 @@ praja-pulse-app/
 ## Deployment (AWS Economical Strategy)
 
 ### Architecture
-- **Frontend:** S3 + CloudFront (~$0.50/mo)
-- **Backend:** AWS App Runner (~$7.00/mo)
+- **Frontend:** S3 + CloudFront (~$0.50/mo) - Managed via Terraform with OAC and SPA routing rules.
+- **Backend:** AWS App Runner (~$7.00/mo) - Auto-deploys on ECR image push.
 - **Registry:** Amazon ECR
 
 ### CI/CD (GitHub Actions)
 The project includes a `.github/workflows/deploy.yml` pipeline that automates:
 1. Building and pushing the Backend Docker image to ECR.
-2. Triggering an App Runner deployment.
+2. Triggering an App Runner deployment (automatic via AWS).
 3. Building the Frontend React app with the production API URL.
 4. Syncing the Frontend to S3 and invalidating CloudFront.
 
@@ -63,7 +63,7 @@ The project includes a `.github/workflows/deploy.yml` pipeline that automates:
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
 - `PROD_API_URL`: Your App Runner service URL (e.g., `https://2xmr2xiypq.us-east-1.awsapprunner.com`).
-- `GEMINI_API_KEY`: Required for deep scoring.
+- `GEMINI_API_KEY`: Required for deep scoring feature.
 
 ## Docker
 
@@ -77,14 +77,18 @@ The project includes a `.github/workflows/deploy.yml` pipeline that automates:
 
 ## Configuration (Environment Variables)
 
-- `GEMINI_API_KEY`: Optional. Enables Gemini-powered "Deep" scoring.
+- `GEMINI_API_KEY`: Required for Gemini-powered "Deep" scoring.
 - `REFRESH_MINUTES`: Frequency of RSS feed scraping (default: 30).
 - `REFRESH_TOKEN`: Protects the `/api/refresh` endpoint in production.
 - `ALLOW_ORIGINS`: CORS configuration (default: `*`).
 
-## Development Conventions
+## Key Features & Conventions
 
-- **Sentiment Logic:** The core "moat" of the project is in `backend/app/ground_truth.py`. To improve accuracy, update the `LEXICON` (Telugu/Tenglish terms) and `ENTITIES` (leader aliases).
-- **State Management:** The backend uses an in-memory cache for simplicity. There is no external database.
-- **Styling:** The frontend uses **Tailwind CSS** for a bold, responsive, and maintainable "bold-poster" aesthetic. Styles are defined using utility classes in `PrajaPulse.tsx`.
-- **RSS Feeds:** Add new publishers by updating `FEEDS` in `backend/app/aggregator.py`.
+- **Sentiment Logic:** The core "moat" is in `backend/app/ground_truth.py`. To improve accuracy, update the `LEXICON` (Telugu/Tenglish terms) and `ENTITIES`.
+- **Interactive UI:**
+  - **Filtering:** Click leader cards to filter signals by entity.
+  - **Pagination:** Signals are paginated (10 per page) for performance.
+  - **Full Screen:** "Full" button toggles immersive dashboard mode.
+  - **About:** "About" modal provides project context.
+- **Styling:** The frontend uses **Tailwind CSS** for a bold, responsive, and maintainable "bold-poster" aesthetic.
+- **AI Integration:** Uses `google-generativeai` SDK for multi-entity sentiment disambiguation.
