@@ -42,17 +42,17 @@ interface PulseData {
   deep_available: boolean;
 }
 
-const PARTY_CONFIG: Record<string, { color: string; bg: string; text: string; logo: string }> = {
-  TDP:   { color: "#F5C518", bg: "bg-[#F5C518]", text: "text-[#1a1400]", logo: "https://api.dicebear.com/9.x/initials/svg?seed=TDP&backgroundColor=F5C518" },
-  JSP:   { color: "#E2231A", bg: "bg-[#E2231A]", text: "text-white", logo: "https://api.dicebear.com/9.x/initials/svg?seed=JSP&backgroundColor=E2231A" },
-  YSRCP: { color: "#1E63C4", bg: "bg-[#1E63C4]", text: "text-white", logo: "https://api.dicebear.com/9.x/initials/svg?seed=YCP&backgroundColor=1E63C4" },
+const PARTY_CONFIG: Record<string, { color: string; bg: string; text: string; fullName: string; logo: string }> = {
+  TDP:   { color: "#F5C518", bg: "bg-[#F5C518]", text: "text-[#1a1400]", fullName: "Telugu Desam Party", logo: "https://api.dicebear.com/9.x/initials/svg?seed=TDP&backgroundColor=F5C518" },
+  JSP:   { color: "#E2231A", bg: "bg-[#E2231A]", text: "text-white", fullName: "Jana Sena Party", logo: "https://api.dicebear.com/9.x/initials/svg?seed=JSP&backgroundColor=E2231A" },
+  YSRCP: { color: "#1E63C4", bg: "bg-[#1E63C4]", text: "text-white", fullName: "Yuvajana Sramika Rythu Congress Party", logo: "https://api.dicebear.com/9.x/initials/svg?seed=YCP&backgroundColor=1E63C4" },
 };
 
 const LEADER_PHOTOS: Record<string, string> = {
-  naidu: "https://api.dicebear.com/9.x/avataaars/svg?seed=Naidu&beard=itzy&hair=shortCombover",
-  lokesh: "https://api.dicebear.com/9.x/avataaars/svg?seed=Lokesh&hair=shortRound",
-  pawan: "https://api.dicebear.com/9.x/avataaars/svg?seed=Pawan&beard=majestic&hair=shaggy",
-  jagan: "https://api.dicebear.com/9.x/avataaars/svg?seed=Jagan&hair=shortRound",
+  naidu: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200&h=200",
+  lokesh: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=200&h=200",
+  pawan: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200&h=200",
+  jagan: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200&h=200",
   tdp: "https://api.dicebear.com/9.x/initials/svg?seed=TDP&backgroundColor=F5C518",
   jsp: "https://api.dicebear.com/9.x/initials/svg?seed=JSP&backgroundColor=E2231A",
   ysrcp: "https://api.dicebear.com/9.x/initials/svg?seed=YCP&backgroundColor=1E63C4",
@@ -83,7 +83,15 @@ export default function PrajaPulse() {
       const r = await fetch(`${API_BASE}/api/pulse?limit=100`);
       if (!r.ok) throw new Error("pulse fetch failed");
       const d: PulseData = await r.json();
-      setData(d);
+      
+      // Sort signals by published date, newest first
+      const sortedSignals = d.signals.sort((a, b) => {
+        const dateA = new Date(a.published).getTime();
+        const dateB = new Date(b.published).getTime();
+        return dateB - dateA;
+      });
+
+      setData({ ...d, signals: sortedSignals });
       setNote(d.signals.length 
         ? `${d.signals.length} signals · updated ${new Date(d.updated_at!).toLocaleString()}` 
         : "Backend reachable but no signals yet.");
@@ -158,7 +166,7 @@ export default function PrajaPulse() {
   };
 
   return (
-    <div className="max-w-[1100px] mx-auto px-6 pb-10 font-archivo">
+    <div className="mx-auto px-6 pb-10 font-archivo">
       {/* Visual Banner */}
       <div className="flex h-2 -mx-6">
         <div className="flex-1 bg-[#F5C518]" />
@@ -229,40 +237,74 @@ export default function PrajaPulse() {
           </button>
         )}
       </div>
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-4 mb-10">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 mb-10">
         {data.board.map((e, i) => {
-          const config = PARTY_CONFIG[e.party] || { color: "#888", bg: "bg-gray-500", text: "text-white", logo: "" };
+          const config = PARTY_CONFIG[e.party] || { color: "#888", bg: "bg-gray-500", text: "text-white", fullName: e.party, logo: "" };
           const isSelected = selectedEntityId === e.id;
           return (
             <div 
               key={e.id} 
               onClick={() => setSelectedEntityId(e.id)}
-              className={`bg-[#141414] border-2 cursor-pointer transition-all ${isSelected ? 'border-white scale-105 z-10' : 'border-black opacity-80 hover:opacity-100'} p-4 relative shadow-[6px_6px_0_var(--shadow-color)]`} 
+              className={`group bg-[#1a1a1a] border-2 cursor-pointer transition-all duration-300 ${isSelected ? 'border-white ring-4 ring-white/10 scale-[1.02] z-10' : 'border-black opacity-90 hover:opacity-100 hover:border-gray-700'} overflow-hidden relative shadow-[8px_8px_0_var(--shadow-color)]`} 
               style={{ "--shadow-color": config.color } as any}
             >
-              <div className="absolute top-2 right-3 font-anton text-xl" style={{ color: config.color }}>#{i + 1}</div>
-              <div className="flex gap-2 items-center mb-3">
-                <div className={`w-12 h-12 overflow-hidden border-2 border-black bg-gray-800`}>
-                  <img src={LEADER_PHOTOS[e.id] || config.logo} alt={e.label} className="w-full h-full object-cover" />
+              {/* Party Strip */}
+              <div className={`h-1.5 ${config.bg}`} />
+              
+              <div className="p-5">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="relative">
+                    <div className="w-20 h-20 overflow-hidden border-2 border-black bg-gray-900 shadow-[4px_4px_0_#000]">
+                      <img src={LEADER_PHOTOS[e.id] || config.logo} alt={e.label} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                    </div>
+                    <div className={`absolute -bottom-2 -right-2 w-8 h-8 border-2 border-black ${config.bg} flex items-center justify-center shadow-[2px_2px_0_#000]`}>
+                       <span className={`font-anton text-xs ${config.text}`}>#{i + 1}</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className={`font-anton text-4xl leading-none mb-1 ${getToneColor(e.net)}`}>
+                      {e.net > 0 ? "+" : ""}{e.net.toFixed(2)}
+                    </div>
+                    <div className="text-[10px] font-black uppercase text-gray-500 tracking-tighter">Net Sentiment</div>
+                  </div>
                 </div>
-                {config.logo && <img src={config.logo} className="w-6 h-6 border border-black shadow-[2px_2px_0_#000]" alt={e.party} />}
+
+                <div className="mb-4">
+                  <h3 className="font-anton text-xl leading-tight uppercase tracking-tight group-hover:text-[#F5C518] transition-colors">{e.label}</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className={`text-[10px] font-black px-1.5 py-0.5 border border-black ${config.bg} ${config.text} uppercase`}>
+                      {e.party}
+                    </span>
+                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest truncate max-w-[150px]">
+                      {config.fullName}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="h-3 bg-black/50 relative overflow-hidden border border-gray-800">
+                    <div 
+                      className="absolute top-0 h-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(255,255,255,0.2)]" 
+                      style={{ 
+                        width: `${Math.abs(e.net) * 50}%`, 
+                        left: `${e.net >= 0 ? 50 : 50 - Math.abs(e.net) * 50}%`,
+                        backgroundColor: e.net > 0 ? '#22c55e' : e.net < 0 ? '#ef4444' : '#ca8a04'
+                      }} 
+                    />
+                    <div className="absolute top-0 left-1/2 w-0.5 h-full bg-white/30 -translate-x-1/2" />
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#F5C518] animate-pulse" />
+                      {e.n} Data Points
+                    </div>
+                    <div className="text-[10px] text-gray-500 font-bold uppercase hover:text-white cursor-help transition-colors">
+                      Details →
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="font-extrabold text-sm leading-tight">{e.label}</div>
-              <div className={`text-[10px] font-black tracking-widest uppercase mb-2`} style={{ color: config.color }}>{e.party}</div>
-              <div className={`font-anton text-3xl leading-none ${getToneColor(e.net)}`}>
-                {e.net > 0 ? "+" : ""}{e.net.toFixed(2)}
-              </div>
-              <div className="h-2 bg-black relative my-2 overflow-hidden">
-                <span 
-                  className="absolute top-0 h-full transition-all duration-500" 
-                  style={{ 
-                    width: `${Math.abs(e.net) * 50}%`, 
-                    left: `${e.net >= 0 ? 50 : 50 - Math.abs(e.net) * 50}%`,
-                    backgroundColor: e.net > 0 ? '#22c55e' : e.net < 0 ? '#ef4444' : '#ca8a04'
-                  }} 
-                />
-              </div>
-              <div className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">{e.n} signals</div>
             </div>
           );
         })}
@@ -304,7 +346,7 @@ export default function PrajaPulse() {
                   })}
                   <span className="text-[10px] font-black uppercase bg-gray-700 px-2 py-0.5">{r.issue}</span>
                   <span className="text-[10px] text-gray-500 font-bold ml-auto flex items-center gap-1 group-hover:text-white transition-colors">
-                    {r.source} <ExternalLink className="w-3 h-3" />
+                    {new Date(r.published).toLocaleDateString()} · {r.source} <ExternalLink className="w-3 h-3" />
                   </span>
                 </div>
               </a>
