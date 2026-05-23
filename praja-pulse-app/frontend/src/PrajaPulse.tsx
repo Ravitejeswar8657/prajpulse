@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { RefreshCw, Sparkles, ExternalLink, Maximize, Info, X, ChevronLeft, ChevronRight, FilterX } from "lucide-react";
+import { RefreshCw, Sparkles, ExternalLink, Maximize, Info, X, ChevronLeft, ChevronRight, FilterX, MapPin, Users } from "lucide-react";
 
 /*
   PRAJA PULSE — Modernized Frontend (Enhanced Edition)
@@ -9,6 +9,24 @@ const API_BASE =
   (typeof window !== "undefined" && (window as any).PRAJA_API_BASE) || "http://127.0.0.1:8000";
 
 const SIGNALS_PER_PAGE = 10;
+
+interface District {
+  id: string;
+  label: string;
+  net: number;
+  n: number;
+}
+
+interface Representative {
+  name: string;
+  party: string;
+  constituency: string;
+}
+
+interface RepData {
+  mps: Representative[];
+  mlas: Representative[];
+}
 
 interface Entity {
   id: string;
@@ -38,9 +56,39 @@ interface PulseData {
   board: Entity[];
   issues: [string, number][];
   signals: Signal[];
+  districts: District[];
   updated_at: string | null;
   deep_available: boolean;
 }
+
+const DISTRICT_GRID: Record<string, { r: number; c: number }> = {
+  "manyam": { r: 0, c: 7 },
+  "srikakulam": { r: 0, c: 8 },
+  "vizianagaram": { r: 1, c: 7 },
+  "asr": { r: 1, c: 6 },
+  "visakhapatnam": { r: 2, c: 7 },
+  "anakapalli": { r: 2, c: 6 },
+  "kakinada": { r: 2, c: 5 },
+  "east_godavari": { r: 3, c: 6 },
+  "konaseema": { r: 3, c: 5 },
+  "west_godavari": { r: 4, c: 5 },
+  "eluru": { r: 4, c: 4 },
+  "ntr": { r: 5, c: 4 },
+  "krishna": { r: 5, c: 5 },
+  "guntur": { r: 6, c: 4 },
+  "bapatla": { r: 6, c: 5 },
+  "palnadu": { r: 6, c: 3 },
+  "prakasam": { r: 7, c: 4 },
+  "nellore": { r: 8, c: 4 },
+  "kurnool": { r: 6, c: 1 },
+  "nandyal": { r: 7, c: 2 },
+  "kadapa": { r: 8, c: 2 },
+  "anantapur": { r: 7, c: 0 },
+  "sathya_sai": { r: 8, c: 0 },
+  "annamayya": { r: 9, c: 1 },
+  "tirupati": { r: 9, c: 3 },
+  "chittoor": { r: 10, c: 2 },
+};
 
 const PARTY_CONFIG: Record<string, { color: string; bg: string; text: string; fullName: string; logo: string }> = {
   TDP:   { color: "#F5C518", bg: "bg-[#F5C518]", text: "text-[#1a1400]", fullName: "Telugu Desam Party", logo: "/assets/parties/Telugu_Desam_Party_Flag.png" },
@@ -65,6 +113,7 @@ export default function PrajaPulse() {
     board: [],
     issues: [],
     signals: [],
+    districts: [],
     updated_at: null,
     deep_available: false
   });
@@ -74,6 +123,9 @@ export default function PrajaPulse() {
   
   // New Enhancement State
   const [selectedEntityId, setSelectedEntityId] = useState<string | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<District | null>(null);
+  const [reps, setReps] = useState<RepData | null>(null);
+  const [repsLoading, setRepsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
@@ -101,6 +153,25 @@ export default function PrajaPulse() {
       setLoading(false);
     }
   }, []);
+
+  const loadReps = async (districtId: string) => {
+    setRepsLoading(true);
+    try {
+      const r = await fetch(`${API_BASE}/api/representatives/${districtId}`);
+      if (!r.ok) throw new Error("reps fetch failed");
+      const d = await r.json();
+      setReps(d);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setRepsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedDistrict) loadReps(selectedDistrict.id);
+    else setReps(null);
+  }, [selectedDistrict]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -319,6 +390,55 @@ export default function PrajaPulse() {
         })}
       </div>
 
+      {/* Regional Radar (District Heatmap) */}
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="font-anton text-xl tracking-widest uppercase flex items-center gap-2">
+          <MapPin className="w-5 h-5 text-[#E2231A]" />
+          Regional Radar
+        </h2>
+        <div className="text-[10px] font-bold text-gray-500 uppercase flex items-center gap-4">
+          <div className="flex items-center gap-1"><div className="w-2 h-2 bg-green-500 rounded-full" /> Positive</div>
+          <div className="flex items-center gap-1"><div className="w-2 h-2 bg-red-500 rounded-full" /> Negative</div>
+          <div className="flex items-center gap-1"><div className="w-2 h-2 bg-gray-600 rounded-full" /> Neutral / No Data</div>
+        </div>
+      </div>
+
+      <div className="bg-[#141414] border-2 border-black p-8 mb-12 relative overflow-hidden group/map shadow-[inset_0_0_100px_rgba(0,0,0,0.5)]">
+        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none bg-[radial-gradient(#F5C518_1px,transparent_1px)] [background-size:20px_20px]" />
+        
+        <div className="relative grid grid-cols-9 gap-2 md:gap-4 max-w-4xl mx-auto">
+          {data.districts.map((dist) => {
+            const grid = DISTRICT_GRID[dist.id] || { r: 0, c: 0 };
+            const sentimentColor = dist.n === 0 ? 'bg-gray-800' : dist.net > 0.1 ? 'bg-green-500/80' : dist.net < -0.1 ? 'bg-red-500/80' : 'bg-yellow-500/80';
+            const glowColor = dist.n === 0 ? '' : dist.net > 0.1 ? 'shadow-[0_0_15px_rgba(34,197,94,0.4)]' : dist.net < -0.1 ? 'shadow-[0_0_15px_rgba(239,68,68,0.4)]' : 'shadow-[0_0_15px_rgba(234,179,8,0.4)]';
+            
+            return (
+              <div 
+                key={dist.id}
+                onClick={() => setSelectedDistrict(dist)}
+                style={{ gridRow: grid.r + 1, gridColumn: grid.c + 1 }}
+                className={`aspect-square cursor-pointer transition-all duration-300 transform hover:scale-110 hover:z-20 border border-black/40 group/tile relative ${sentimentColor} ${glowColor}`}
+              >
+                <div className="absolute inset-0 flex items-center justify-center">
+                   <span className="font-anton text-[8px] md:text-[10px] uppercase text-black leading-none text-center px-1 drop-shadow-sm">{dist.label.split(" ").pop()}</span>
+                </div>
+                {/* Tooltip on Hover */}
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-32 bg-black border border-[#F5C518] p-2 pointer-events-none opacity-0 group-hover/tile:opacity-100 transition-opacity z-50 shadow-xl">
+                  <div className="text-[10px] font-black uppercase text-[#F5C518] mb-1">{dist.label}</div>
+                  <div className="flex justify-between text-[9px] font-bold text-white uppercase">
+                    <span>Pulse: {dist.net > 0 ? "+" : ""}{dist.net}</span>
+                    <span>{dist.n} Sig</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="mt-8 text-center text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em]">
+          Interactive Sentiment Heatmap · Click District for Representatives
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-[1.7fr_1fr] gap-8">
         <section>
           <div className="flex items-center justify-between mb-4">
@@ -413,6 +533,91 @@ export default function PrajaPulse() {
           </div>
         </aside>
       </div>
+
+      {/* District Representative Modal */}
+      {selectedDistrict && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/95 backdrop-blur-md">
+          <div className="relative bg-[#0a0a0a] border-4 border-black shadow-[30px_30px_0_#F5C518] max-w-4xl w-full p-8 max-h-[90vh] overflow-y-auto">
+            <button 
+              onClick={() => setSelectedDistrict(null)}
+              className="absolute top-4 right-4 p-2 hover:bg-red-500 hover:text-white border-2 border-black transition-all"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            
+            <div className="flex items-center gap-4 mb-8 border-b-8 border-b-[#E2231A] pb-4">
+              <div className={`w-16 h-16 flex items-center justify-center border-4 border-black bg-[#F5C518] text-black font-anton text-2xl shadow-[4px_4px_0_#000]`}>
+                {selectedDistrict.label.substring(0, 2).toUpperCase()}
+              </div>
+              <div>
+                <h2 className="font-anton text-5xl tracking-tighter uppercase">{selectedDistrict.label}</h2>
+                <div className="flex items-center gap-4 text-xs font-black uppercase text-gray-500 tracking-widest mt-1">
+                  <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> District Intelligence</span>
+                  <span className="flex items-center gap-1 text-[#F5C518]">Pulse: {selectedDistrict.net > 0 ? "+" : ""}{selectedDistrict.net}</span>
+                </div>
+              </div>
+            </div>
+
+            {repsLoading ? (
+              <div className="py-20 text-center">
+                <RefreshCw className="w-12 h-12 animate-spin mx-auto text-[#F5C518] mb-4" />
+                <div className="font-anton text-xl uppercase tracking-widest">Loading Representative Data...</div>
+              </div>
+            ) : reps ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <section>
+                  <h3 className="font-anton text-2xl tracking-widest text-[#F5C518] mb-6 uppercase flex items-center gap-2 border-b-2 border-dashed border-gray-800 pb-2">
+                    <Users className="w-5 h-5" /> Members of Parliament
+                  </h3>
+                  <div className="space-y-4">
+                    {reps.mps.length > 0 ? reps.mps.map((m, idx) => (
+                      <div key={idx} className="bg-[#141414] border-l-4 border-l-[#F5C518] p-4 shadow-[4px_4px_0_#000]">
+                        <div className="text-lg font-black text-white leading-none">{m.name}</div>
+                        <div className="text-[10px] font-bold text-gray-500 uppercase mt-1 tracking-widest">
+                          {m.constituency} · {m.party}
+                        </div>
+                      </div>
+                    )) : <div className="text-gray-600 font-bold italic">No Lok Sabha data available for this segment.</div>}
+                  </div>
+                </section>
+
+                <section>
+                  <h3 className="font-anton text-2xl tracking-widest text-[#E2231A] mb-6 uppercase flex items-center gap-2 border-b-2 border-dashed border-gray-800 pb-2">
+                    <Users className="w-5 h-5" /> Legislative Assembly
+                  </h3>
+                  <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                    {reps.mlas.length > 0 ? reps.mlas.map((m, idx) => (
+                      <div key={idx} className="bg-[#141414] border border-gray-900 p-3 hover:border-[#F5C518] transition-colors group">
+                        <div className="flex justify-between items-center">
+                          <div className="font-extrabold text-white text-sm group-hover:text-[#F5C518] transition-colors">{m.name}</div>
+                          <span className={`text-[9px] font-black px-1.5 py-0.5 border border-black ${PARTY_CONFIG[m.party]?.bg || 'bg-gray-700'} ${PARTY_CONFIG[m.party]?.text || 'text-white'}`}>
+                            {m.party}
+                          </span>
+                        </div>
+                        <div className="text-[9px] font-bold text-gray-500 uppercase mt-1">{m.constituency} Constituency</div>
+                      </div>
+                    )) : <div className="text-gray-600 font-bold italic">No Assembly data available.</div>}
+                  </div>
+                </section>
+              </div>
+            ) : (
+              <div className="py-20 text-center text-gray-600 font-bold uppercase tracking-widest">
+                No verified data found for this region.
+              </div>
+            )}
+
+            <div className="mt-12 pt-6 border-t border-gray-800 flex justify-between items-center">
+              <span className="text-[10px] font-black uppercase text-gray-600">Official Election Commission Data 2024–2029</span>
+              <button 
+                onClick={() => setSelectedDistrict(null)}
+                className="bg-white text-black font-anton text-sm tracking-widest px-8 py-3 border-2 border-black hover:bg-[#F5C518] transition-all active:translate-x-1 active:translate-y-1"
+              >
+                CLOSE INTELLIGENCE
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* About Modal */}
       {isAboutOpen && (

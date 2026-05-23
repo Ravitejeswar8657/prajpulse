@@ -26,6 +26,7 @@ from pydantic import BaseModel
 
 from .aggregator import fetch_headlines
 from .ground_truth import score_text, ENTITIES, DISTRICTS
+from .representatives import REPRESENTATIVES
 from . import deep_scorer
 
 REFRESH_MINUTES = int(os.environ.get("REFRESH_MINUTES", "30"))
@@ -135,6 +136,13 @@ def pulse(limit: int = 50):
         media_type="application/json",
         headers={"Cache-Control": "public, max-age=300"}
     )
+
+@app.get("/api/representatives/{district_id}")
+def get_representatives(district_id: str):
+    reps = REPRESENTATIVES.get(district_id)
+    if not reps:
+        raise HTTPException(404, "District not found.")
+    return reps
 
 def pulse_json(limit: int):
     import json
