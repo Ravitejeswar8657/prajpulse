@@ -45,12 +45,9 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      # Note: If your App Runner service is set to "Automatic" deployment, 
-      # it will pick up the 'latest' tag automatically.
-      # Otherwise, use this step to trigger manually:
-      - name: Deploy to App Runner
-        run: |
-          aws apprunner start-deployment --service-arn ${{ env.APP_RUNNER_SERVICE_ARN }}
+      # Note: Since the App Runner service has 'auto_deployments_enabled = true' in Terraform,
+      # it will automatically detect the 'latest' tag push to ECR and start a deployment.
+      # No manual 'start-deployment' command is needed.
 
   deploy-frontend:
     runs-on: ubuntu-latest
