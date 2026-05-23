@@ -109,13 +109,23 @@ def health():
 
 @app.get("/api/pulse")
 def pulse(limit: int = 50):
-    return {
+    from fastapi import Response
+    return Response(
+        content=pulse_json(limit),
+        media_type="application/json",
+        headers={"Cache-Control": "public, max-age=300"}
+    )
+
+def pulse_json(limit: int):
+    import json
+    data = {
         "updated_at": _cache["updated_at"],
         "board": _cache["board"],
         "issues": _cache["issues"],
         "signals": _cache["scored"][:limit],
         "deep_available": deep_scorer.deep_available(),
     }
+    return json.dumps(data)
 
 
 class DeepReq(BaseModel):
