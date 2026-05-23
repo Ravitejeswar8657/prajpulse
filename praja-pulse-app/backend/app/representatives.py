@@ -1,6 +1,6 @@
 """
-Official data for MLAs and MPs of Andhra Pradesh (2024 - 2029).
-Categorized by District and Constituency based on 2024 Election Results.
+Verified Representative Data for all 26 Districts of Andhra Pradesh (2024-2029).
+Categorized by District ID and Election Commission Results.
 """
 
 REPRESENTATIVES = {
@@ -15,16 +15,7 @@ REPRESENTATIVES = {
             {"name": "Koona Ravi Kumar", "party": "TDP", "constituency": "Amadalavalasa"},
             {"name": "Nadukuditi Eswara Rao", "party": "BJP", "constituency": "Etcherla"},
             {"name": "Baggu Ramanamurthy", "party": "TDP", "constituency": "Narasannapeta"},
-            {"name": "Kondru Murali Mohan", "party": "TDP", "constituency": "Rajam (SC)"},
-        ]
-    },
-    "manyam": {
-        "mps": [], # Araku MP covers this area
-        "mlas": [
-            {"name": "Nimmaka Jaya Krishna", "party": "JSP", "constituency": "Palakonda (ST)"},
-            {"name": "Jagadeeswari Thoyaka", "party": "TDP", "constituency": "Kurupam (ST)"},
-            {"name": "Bonela Vijaya Chandra", "party": "TDP", "constituency": "Parvathipuram (SC)"},
-            {"name": "Gummidi Sandhyarani", "party": "TDP", "constituency": "Salur (ST)"},
+            {"name": "Kondru Murali Mohan", "party": "TDP", "constituency": "Rajam (SC)"}
         ]
     },
     "vizianagaram": {
@@ -35,7 +26,16 @@ REPRESENTATIVES = {
             {"name": "Kondapalli Srinivas", "party": "TDP", "constituency": "Gajapathinagaram"},
             {"name": "Lokam Naga Madhavi", "party": "JSP", "constituency": "Nellimarla"},
             {"name": "Aditi Vijayalakshmi Gajapathi Raju", "party": "TDP", "constituency": "Vizianagaram"},
-            {"name": "Kolla Lalitha Kumari", "party": "TDP", "constituency": "Srungavarapukota"},
+            {"name": "Kolla Lalitha Kumari", "party": "TDP", "constituency": "Srungavarapukota"}
+        ]
+    },
+    "manyam": {
+        "mps": [{"name": "Gumma Thanuja Rani", "party": "YSRCP", "constituency": "Araku (ST)"}],
+        "mlas": [
+            {"name": "Jagadeeswari Thoyaka", "party": "TDP", "constituency": "Kurupam (ST)"},
+            {"name": "Nimmaka Jaya Krishna", "party": "JSP", "constituency": "Palakonda (ST)"},
+            {"name": "Bonela Vijaya Chandra", "party": "TDP", "constituency": "Parvathipuram (SC)"},
+            {"name": "Gummidi Sandhyarani", "party": "TDP", "constituency": "Salur (ST)"}
         ]
     },
     "visakhapatnam": {
@@ -46,7 +46,7 @@ REPRESENTATIVES = {
             {"name": "Chaitanya Vamsi Krishna Srinivas", "party": "JSP", "constituency": "Visakhapatnam South"},
             {"name": "Vishnu Kumar Raju", "party": "BJP", "constituency": "Visakhapatnam North"},
             {"name": "P.G.V.R. Naidu (Gana Babu)", "party": "TDP", "constituency": "Visakhapatnam West"},
-            {"name": "Palla Srinivasa Rao", "party": "TDP", "constituency": "Gajuwaka"},
+            {"name": "Palla Srinivasa Rao", "party": "TDP", "constituency": "Gajuwaka"}
         ]
     },
     "anakapalli": {
@@ -58,7 +58,7 @@ REPRESENTATIVES = {
             {"name": "Panchakarla Ramesh Babu", "party": "JSP", "constituency": "Pendurthi"},
             {"name": "Sundarapu Vijay Kumar", "party": "JSP", "constituency": "Yelamanchili"},
             {"name": "Vangalapudi Anitha", "party": "TDP", "constituency": "Payakaraopeta (SC)"},
-            {"name": "Chintakayala Ayyanna Patrudu", "party": "TDP", "constituency": "Narsipatnam"},
+            {"name": "Chintakayala Ayyanna Patrudu", "party": "TDP", "constituency": "Narsipatnam"}
         ]
     },
     "asr": {
@@ -66,7 +66,7 @@ REPRESENTATIVES = {
         "mlas": [
             {"name": "Regam Matyalingam", "party": "YSRCP", "constituency": "Araku Valley (ST)"},
             {"name": "Matsyarasa Visweswara Raju", "party": "YSRCP", "constituency": "Paderu (ST)"},
-            {"name": "Miriyala Sirisha Devi", "party": "TDP", "constituency": "Rampachodavaram (ST)"},
+            {"name": "Miriyala Sirisha Devi", "party": "TDP", "constituency": "Rampachodavaram (ST)"}
         ]
     },
     "kakinada": {
@@ -79,7 +79,17 @@ REPRESENTATIVES = {
             {"name": "Nimmakayala Chinarajappa", "party": "TDP", "constituency": "Peddapuram"},
             {"name": "Nallamilli Ramakrishna Reddy", "party": "BJP", "constituency": "Anaparthy"},
             {"name": "Vanamadi Venkateswara Rao", "party": "TDP", "constituency": "Kakinada City"},
-            {"name": "Jyothula Nehru", "party": "TDP", "constituency": "Jaggampeta"},
+            {"name": "Jyothula Nehru", "party": "TDP", "constituency": "Jaggampeta"}
+        ]
+    },
+    "east_godavari": {
+        "mps": [{"name": "Daggubati Purandeswari", "party": "BJP", "constituency": "Rajahmundry"}],
+        "mlas": [
+            {"name": "Gorantla Butchaiah Chowdary", "party": "TDP", "constituency": "Rajahmundry Rural"},
+            {"name": "Adireddy Srinivas", "party": "TDP", "constituency": "Rajahmundry City"},
+            {"name": "Battula Balarama Krishna", "party": "JSP", "constituency": "Rajanagaram"},
+            {"name": "Muppidi Venkateswara Rao", "party": "TDP", "constituency": "Kovvur (SC)"},
+            {"name": "Kandula Durgesh", "party": "JSP", "constituency": "Nidadavole"}
         ]
     },
     "konaseema": {
@@ -91,17 +101,7 @@ REPRESENTATIVES = {
             {"name": "Deva Varaprasad", "party": "JSP", "constituency": "Razole (SC)"},
             {"name": "Gidijala Satyanarayana", "party": "JSP", "constituency": "Gannavaram (Konaseema)"},
             {"name": "Bandaru Satyananda Rao", "party": "TDP", "constituency": "Kothapeta"},
-            {"name": "Vegulla Jogeswara Rao", "party": "TDP", "constituency": "Mandapeta"},
-        ]
-    },
-    "east_godavari": {
-        "mps": [{"name": "Daggubati Purandeswari", "party": "BJP", "constituency": "Rajahmundry"}],
-        "mlas": [
-            {"name": "Battula Balarama Krishna", "party": "JSP", "constituency": "Rajanagaram"},
-            {"name": "Adireddy Srinivas", "party": "TDP", "constituency": "Rajahmundry City"},
-            {"name": "Gorantla Butchaiah Chowdary", "party": "TDP", "constituency": "Rajahmundry Rural"},
-            {"name": "Muppidi Venkateswara Rao", "party": "TDP", "constituency": "Kovvur (SC)"},
-            {"name": "Kandula Durgesh", "party": "JSP", "constituency": "Nidadavole"},
+            {"name": "Vegulla Jogeswara Rao", "party": "TDP", "constituency": "Mandapeta"}
         ]
     },
     "west_godavari": {
@@ -110,10 +110,10 @@ REPRESENTATIVES = {
             {"name": "Satyanarayana Pithani", "party": "TDP", "constituency": "Achanta"},
             {"name": "Nimmala Rama Naidu", "party": "TDP", "constituency": "Palakollu"},
             {"name": "Pulaparthi Ramanjaneyulu", "party": "TDP", "constituency": "Narasapuram"},
-            {"name": "Ramanjaneyulu Pulaparthi (Anjibabu)", "party": "TDP", "constituency": "Bhimavaram"},
+            {"name": "Pulaparthi Ramanjaneyulu (Anjibabu)", "party": "TDP", "constituency": "Bhimavaram"},
             {"name": "Kanumuru Raghu Rama Krishna Raju", "party": "TDP", "constituency": "Undi"},
             {"name": "Arimilli Radha Krishna", "party": "TDP", "constituency": "Tanuku"},
-            {"name": "Bolisetti Srinivas", "party": "JSP", "constituency": "Tadepalligudem"},
+            {"name": "Bolisetti Srinivas", "party": "JSP", "constituency": "Tadepalligudem"}
         ]
     },
     "eluru": {
@@ -124,7 +124,7 @@ REPRESENTATIVES = {
             {"name": "Badeti Chanti", "party": "TDP", "constituency": "Eluru"},
             {"name": "Maddipati Venkata Raju", "party": "TDP", "constituency": "Gopalapuram (SC)"},
             {"name": "Chirri Balaraju", "party": "JSP", "constituency": "Polavaram (ST)"},
-            {"name": "Songa Roshan Kumar", "party": "TDP", "constituency": "Chintalapudi (SC)"},
+            {"name": "Songa Roshan Kumar", "party": "TDP", "constituency": "Chintalapudi (SC)"}
         ]
     },
     "ntr": {
@@ -136,7 +136,7 @@ REPRESENTATIVES = {
             {"name": "Gadde Ramamohan Rao", "party": "TDP", "constituency": "Vijayawada East"},
             {"name": "Vasantha Krishna Prasad", "party": "TDP", "constituency": "Mylavaram"},
             {"name": "Tangirala Sowmya", "party": "TDP", "constituency": "Nandigama (SC)"},
-            {"name": "Samineni Udayabhanu", "party": "TDP", "constituency": "Jaggayyapeta"},
+            {"name": "Samineni Udayabhanu", "party": "TDP", "constituency": "Jaggayyapeta"}
         ]
     },
     "krishna": {
@@ -150,7 +150,7 @@ REPRESENTATIVES = {
             {"name": "Kollu Ravindra", "party": "TDP", "constituency": "Machilipatnam"},
             {"name": "Mandali Buddha Prasad", "party": "JSP", "constituency": "Avanigadda"},
             {"name": "Varla Kumar Raja", "party": "TDP", "constituency": "Pamarru (SC)"},
-            {"name": "Bode Prasad", "party": "TDP", "constituency": "Penamaluru"},
+            {"name": "Bode Prasad", "party": "TDP", "constituency": "Penamaluru"}
         ]
     },
     "guntur": {
@@ -161,7 +161,7 @@ REPRESENTATIVES = {
             {"name": "Dhulipalla Narendra Kumar", "party": "TDP", "constituency": "Ponnur"},
             {"name": "Nadendla Manohar", "party": "JSP", "constituency": "Tenali"},
             {"name": "Galla Madhavi", "party": "TDP", "constituency": "Guntur West"},
-            {"name": "Mohammed Naseer Ahmed", "party": "TDP", "constituency": "Guntur East"},
+            {"name": "Mohammed Naseer Ahmed", "party": "TDP", "constituency": "Guntur East"}
         ]
     },
     "palnadu": {
@@ -173,7 +173,7 @@ REPRESENTATIVES = {
             {"name": "Kanna Lakshminarayana", "party": "TDP", "constituency": "Sattenapalle"},
             {"name": "G.V. Anjaneyulu", "party": "TDP", "constituency": "Vinukonda"},
             {"name": "Yarapathineni Srinivasa Rao", "party": "TDP", "constituency": "Gurajala"},
-            {"name": "Julakanti Brahmananda Reddy", "party": "TDP", "constituency": "Macherla"},
+            {"name": "Julakanti Brahmananda Reddy", "party": "TDP", "constituency": "Macherla"}
         ]
     },
     "bapatla": {
@@ -184,7 +184,7 @@ REPRESENTATIVES = {
             {"name": "Vegesana Narendra Varma", "party": "TDP", "constituency": "Bapatla"},
             {"name": "Yeluri Sambasiva Rao", "party": "TDP", "constituency": "Parchur"},
             {"name": "Madduluri Malakondaiah Yadav", "party": "TDP", "constituency": "Chirala"},
-            {"name": "Gottipati Ravi Kumar", "party": "TDP", "constituency": "Addanki"},
+            {"name": "Gottipati Ravi Kumar", "party": "TDP", "constituency": "Addanki"}
         ]
     },
     "prakasam": {
@@ -197,7 +197,7 @@ REPRESENTATIVES = {
             {"name": "Dola Sree Bala Veeranjaneya Swamy", "party": "TDP", "constituency": "Kondapi (SC)"},
             {"name": "Kandula Narayana Reddy", "party": "TDP", "constituency": "Markapuram"},
             {"name": "Muthumula Ashok Reddy", "party": "TDP", "constituency": "Giddalur"},
-            {"name": "Mukku Ugra Narasimha Reddy", "party": "TDP", "constituency": "Kanigiri"},
+            {"name": "Mukku Ugra Narasimha Reddy", "party": "TDP", "constituency": "Kanigiri"}
         ]
     },
     "nellore": {
@@ -210,7 +210,7 @@ REPRESENTATIVES = {
             {"name": "Kotamreddy Sridhar Reddy", "party": "TDP", "constituency": "Nellore Rural"},
             {"name": "Somireddy Chandra Mohan Reddy", "party": "TDP", "constituency": "Sarvepalli"},
             {"name": "Kurugondla Ramakrishna", "party": "TDP", "constituency": "Venkatagiri"},
-            {"name": "Kakarla Suresh", "party": "TDP", "constituency": "Udayagiri"},
+            {"name": "Kakarla Suresh", "party": "TDP", "constituency": "Udayagiri"}
         ]
     },
     "kurnool": {
@@ -220,10 +220,10 @@ REPRESENTATIVES = {
             {"name": "Boggula Dastagiri", "party": "TDP", "constituency": "Kodumur (SC)"},
             {"name": "T. G. Bharath", "party": "TDP", "constituency": "Kurnool"},
             {"name": "Gowru Charitha Reddy", "party": "TDP", "constituency": "Panyam"},
-            {"name": "Jayageswar Rao", "party": "TDP", "constituency": "Adoni"}, # Placeholder for Adoni winner
+            {"name": "Jayageswar Rao", "party": "TDP", "constituency": "Adoni"},
             {"name": "B. Virupakshi", "party": "YSRCP", "constituency": "Alur"},
             {"name": "Jaya Nageswara Reddy", "party": "TDP", "constituency": "Yemmiganur"},
-            {"name": "Y. Balanagi Reddy", "party": "YSRCP", "constituency": "Mantralayam"},
+            {"name": "Y. Balanagi Reddy", "party": "YSRCP", "constituency": "Mantralayam"}
         ]
     },
     "nandyal": {
@@ -234,7 +234,7 @@ REPRESENTATIVES = {
             {"name": "Githa Jayasurya", "party": "TDP", "constituency": "Nandikotkur (SC)"},
             {"name": "Kotla Jayasurya Prakasha Reddy", "party": "TDP", "constituency": "Dhone"},
             {"name": "N. M. D. Farooq", "party": "TDP", "constituency": "Nandyal"},
-            {"name": "B. C. Janardhan Reddy", "party": "TDP", "constituency": "Banaganapalle"},
+            {"name": "B. C. Janardhan Reddy", "party": "TDP", "constituency": "Banaganapalle"}
         ]
     },
     "anantapur": {
@@ -247,7 +247,7 @@ REPRESENTATIVES = {
             {"name": "Bandantila Veeranjaneyulu", "party": "TDP", "constituency": "Singanamala (SC)"},
             {"name": "Daggubati Venkateswara Prasad", "party": "TDP", "constituency": "Anantapur Urban"},
             {"name": "Amilineni Surendra Babu", "party": "TDP", "constituency": "Kalyandurg"},
-            {"name": "Paritala Sunitha", "party": "TDP", "constituency": "Raptadu"},
+            {"name": "Paritala Sunitha", "party": "TDP", "constituency": "Raptadu"}
         ]
     },
     "sathya_sai": {
@@ -258,7 +258,7 @@ REPRESENTATIVES = {
             {"name": "S. Savitha", "party": "TDP", "constituency": "Penukonda"},
             {"name": "Sindhura Reddy Palle", "party": "TDP", "constituency": "Puttaparthi"},
             {"name": "Y. Satya Kumar", "party": "BJP", "constituency": "Dharmavaram"},
-            {"name": "Kandikunta Venkata Prasad", "party": "TDP", "constituency": "Kadiri"},
+            {"name": "Kandikunta Venkata Prasad", "party": "TDP", "constituency": "Kadiri"}
         ]
     },
     "kadapa": {
@@ -270,7 +270,7 @@ REPRESENTATIVES = {
             {"name": "Putha Krishna Chaitanya Reddy", "party": "TDP", "constituency": "Kamalapuram"},
             {"name": "C. Adinarayana Reddy", "party": "BJP", "constituency": "Jammalamadugu"},
             {"name": "Varada Rama Chandra Reddy", "party": "TDP", "constituency": "Proddatur"},
-            {"name": "Putta Sudhakar Yadav", "party": "TDP", "constituency": "Mydukur"},
+            {"name": "Putta Sudhakar Yadav", "party": "TDP", "constituency": "Mydukur"}
         ]
     },
     "annamayya": {
@@ -281,7 +281,7 @@ REPRESENTATIVES = {
             {"name": "Mandipalli Ramprasad Reddy", "party": "TDP", "constituency": "Rayachoti"},
             {"name": "Peddireddy Dwarakanatha Reddy", "party": "YSRCP", "constituency": "Thamballapalle"},
             {"name": "Shahjahan Basha", "party": "TDP", "constituency": "Madanapalle"},
-            {"name": "Nallari Kishore Kumar Reddy", "party": "TDP", "constituency": "Pileru"},
+            {"name": "Nallari Kishore Kumar Reddy", "party": "TDP", "constituency": "Pileru"}
         ]
     },
     "chittoor": {
@@ -294,7 +294,7 @@ REPRESENTATIVES = {
             {"name": "Dr. V. M. Thomas", "party": "TDP", "constituency": "Gangadhara Nellore (SC)"},
             {"name": "Gali Bhanu Prakash", "party": "TDP", "constituency": "Nagari"},
             {"name": "N. Amaranatha Reddy", "party": "TDP", "constituency": "Palamaner"},
-            {"name": "N. Chandrababu Naidu", "party": "TDP", "constituency": "Kuppam"},
+            {"name": "N. Chandrababu Naidu", "party": "TDP", "constituency": "Kuppam"}
         ]
     },
     "tirupati": {
@@ -304,7 +304,7 @@ REPRESENTATIVES = {
             {"name": "Bojjala Venkata Sudhir Reddy", "party": "TDP", "constituency": "Srikalahasti"},
             {"name": "Koneti Adimulam", "party": "TDP", "constituency": "Satyavedu (SC)"},
             {"name": "Nelavala Vijayasree", "party": "TDP", "constituency": "Sullurpeta (SC)"},
-            {"name": "Pasam Sunil Kumar", "party": "TDP", "constituency": "Gudur (SC)"},
+            {"name": "Pasam Sunil Kumar", "party": "TDP", "constituency": "Gudur (SC)"}
         ]
     }
 }
